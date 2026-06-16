@@ -1,0 +1,20 @@
+terraform.tfvars
+  h_8f8ed475454a1f 13
+providers.tf
+  h_8f8ed475454a1f 17
+variables.tf
+  h_8f8ed475454a1f 7-8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "37e2db92eb1df43f2bd0adc3d77b593cfedaffc5",
+  "prompts": {},
+  "humans": {
+    "h_8f8ed475454a1f": {
+      "author": "panlingnan <panlingnan@bytedance.com>"
+    }
+  },
+  "attestation_metadata": {},
+  "remote_transcripts": {}
+}
