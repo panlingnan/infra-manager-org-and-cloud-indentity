@@ -19,7 +19,7 @@ crash.*.log
 #     若包含真实凭证/密码，请改为不提交并在 README 中说明。
 # *.tfvars
 # *.tfvars.json
-
+terraform.tfvars.json
 # Ignore override files as they are usually used to override resources locally
 override.tf
 override.tf.json

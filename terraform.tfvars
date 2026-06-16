@@ -14,7 +14,7 @@ region      = "cn-guilin-boe"
 project     = "cloud-identity-demo"
 environment = "prod"
 # 企业组织根 OU ID（控制台 → 企业组织 → 组织结构 → 根节点 ID）
-root_parent_id = "7352814720803651635"
+root_parent_id = "7184700455426801708"
 
 # ------------------------------------------------------------------------------
 # 组织结构：2 个一级 OU（Production / Sandbox）
