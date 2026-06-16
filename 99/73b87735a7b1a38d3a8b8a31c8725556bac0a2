@@ -1,0 +1,143 @@
+providers.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-5,7,11-13,15
+  s_b7f5500d8ba65b::t_32f6da00146d84 6,8-10,14 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a314934a5cd2bedabbb1ccb","tool_type":"agent","tool_id":"Write","line_ranges":[{"Single":6},{"Range":[8,10]},{"Single":14}]}]}
+modules/permission-set-assignment/versions.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-8
+modules/cloud-identity-group/variables.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-33
+modules/organization-account/variables.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-41
+modules/cloud-identity-group/versions.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-8
+modules/cloud-identity-user/outputs.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-14
+modules/organization-account/main.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-24
+modules/permission-set/variables.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-37
+modules/cloud-identity-user/versions.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-8
+modules/organization-account/versions.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-8
+modules/organization-unit/main.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-14
+outputs.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-36
+modules/cloud-identity-user/variables.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-41
+modules/permission-set-assignment/main.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-25
+README.md
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-342
+locals.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-12
+modules/organization-unit/outputs.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-9
+variables.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-129
+modules/cloud-identity-user/main.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-20
+modules/organization-unit/variables.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-15
+modules/organization-unit/versions.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-9
+modules/permission-set/main.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-25
+terraform.tfvars
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-180
+main.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-122
+modules/cloud-identity-group/outputs.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-14
+modules/permission-set/outputs.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-14
+modules/cloud-identity-group/main.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-22
+modules/permission-set/versions.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-8
+versions.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-14
+.gitignore
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-44
+modules/permission-set-assignment/outputs.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-9
+modules/permission-set-assignment/variables.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-24
+modules/organization-account/outputs.tf
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "9973b87735a7b1a38d3a8b8a31c8725556bac0a2",
+  "prompts": {},
+  "sessions": {
+    "s_b7f5500d8ba65b": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6a1e8f108e54f7cb0882627c",
+        "model": "openrouter-2o__max"
+      },
+      "human_author": null
+    }
+  },
+  "attestation_metadata": {
+    "providers.tf": [
+      {
+        "hash": "s_b7f5500d8ba65b::t_32f6da00146d84",
+        "line_ranges": [
+          {
+            "Single": 6
+          },
+          {
+            "Range": [
+              8,
+              10
+            ]
+          },
+          {
+            "Single": 14
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a314934a5cd2bedabbb1ccb",
+            "tool_type": "agent",
+            "tool_id": "Write",
+            "line_ranges": [
+              {
+                "Single": 6
+              },
+              {
+                "Range": [
+                  8,
+                  10
+                ]
+              },
+              {
+                "Single": 14
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "remote_transcripts": {
+    "s_b7f5500d8ba65b": {
+      "tool": "trae",
+      "conversation_id": "6a1e8f108e54f7cb0882627c",
+      "session_id": "6a1e8f108e54f7cb0882627c",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "s_b7f5500d8ba65b::t_32f6da00146d84": {
+      "tool": "trae",
+      "conversation_id": "6a1e8f108e54f7cb0882627c",
+      "session_id": "6a1e8f108e54f7cb0882627c",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    }
+  }
+}
