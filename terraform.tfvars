@@ -10,7 +10,7 @@
 #      避免明文写入 tfvars 文件
 # ==============================================================================
 
-region      = "cn-guilin-boe"
+region      = "cn-beijing"
 project     = "cloud-identity-demo"
 environment = "prod"
 # 企业组织根 OU ID（控制台 → 企业组织 → 组织结构 → 根节点 ID）

@@ -4,8 +4,8 @@
 
 variable "region" {
   type        = string
-  description = "火山引擎区域，云身份中心建议使用 cn-guilin-boe"
-  default     = "cn-guilin-boe"
+  description = "火山引擎区域，云身份中心建议使用 cn-beijing"
+  default     = "cn-beijing"
 }
 
 variable "project" {
