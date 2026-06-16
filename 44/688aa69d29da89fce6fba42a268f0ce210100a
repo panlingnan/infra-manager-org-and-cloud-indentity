@@ -1,0 +1,47 @@
+.terraform.lock.hcl
+  s_b7f5500d8ba65b::t_d896a3ed59bbe7 1-10
+.gitignore
+  h_8f8ed475454a1f 22
+terraform.tfvars
+  h_8f8ed475454a1f 17
+providers.tf
+  h_8f8ed475454a1f 14-17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "44688aa69d29da89fce6fba42a268f0ce210100a",
+  "prompts": {},
+  "humans": {
+    "h_8f8ed475454a1f": {
+      "author": "panlingnan <panlingnan@bytedance.com>"
+    }
+  },
+  "sessions": {
+    "s_b7f5500d8ba65b": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6a1e8f108e54f7cb0882627c",
+        "model": "openrouter-2o__max"
+      },
+      "human_author": "panlingnan <panlingnan@bytedance.com>"
+    }
+  },
+  "attestation_metadata": {},
+  "remote_transcripts": {
+    "s_b7f5500d8ba65b": {
+      "tool": "trae",
+      "conversation_id": "6a1e8f108e54f7cb0882627c",
+      "session_id": "6a1e8f108e54f7cb0882627c",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "s_b7f5500d8ba65b::t_f5d24a09cec98c": {
+      "tool": "trae",
+      "conversation_id": "6a1e8f108e54f7cb0882627c",
+      "session_id": "6a1e8f108e54f7cb0882627c",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    }
+  }
+}
