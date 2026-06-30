@@ -11,8 +11,8 @@
 # 注意：云身份中心是企业组织管理员账号下的全局服务，必须使用管理员账号 AK/SK 执行。
 # ==============================================================================
 provider "volcenginecc" {
-  endpoints = {
-    cloudcontrolapi = "open.stable.volcengineapi-test.com"
-  }
+  # endpoints = {
+  #   cloudcontrolapi = "open.stable.volcengineapi-test.com"
+  # }
   region     = "cn-beijing"
 }
