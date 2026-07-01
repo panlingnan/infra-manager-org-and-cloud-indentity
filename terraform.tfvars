@@ -23,12 +23,12 @@ root_parent_id = "7352814720803651635"
 organization_units = [
   {
     key         = "ou_payment"
-    name        = "PaymentBU-260701"
+    name        = "PaymentBU-260701b"
     description = "支付业务单元"
   },
   {
     key         = "ou_marketing"
-    name        = "MarketingBU-260701"
+    name        = "MarketingBU-260701b"
     description = "营销业务单元"
   },
 ]
@@ -39,27 +39,27 @@ organization_units = [
 # ------------------------------------------------------------------------------
 organization_accounts = [
   {
-    account_name             = "payment-app-260701"
-    show_name                = "PaymentApp260701"
+    account_name             = "payment-app-260701b"
+    show_name                = "PaymentApp260701b"
     description              = "支付业务生产账号"
     org_unit_key             = "ou_payment"
     allow_console            = 1
     verification_relation_id = ""
     tags = [
       { key = "BusinessUnit", value = "Payment" },
-      { key = "CostCenter", value = "PAY-260701" },
+      { key = "CostCenter", value = "PAY-260701b" },
     ]
   },
   {
-    account_name             = "marketing-lab-260701"
-    show_name                = "MarketingLab260701"
+    account_name             = "marketing-lab-260701b"
+    show_name                = "MarketingLab260701b"
     description              = "营销业务实验/沙盒账号"
     org_unit_key             = "ou_marketing"
     allow_console            = 1
     verification_relation_id = ""
     tags = [
       { key = "BusinessUnit", value = "Marketing" },
-      { key = "CostCenter", value = "MKT-260701" },
+      { key = "CostCenter", value = "MKT-260701b" },
     ]
   },
 ]
@@ -70,7 +70,7 @@ organization_accounts = [
 permission_sets = [
   {
     key              = "ps_network_admin"
-    name             = "NetworkOpsAdmin-260701"
+    name             = "NetworkOpsAdmin-260701b"
     description      = "网络运维管理员，可读写 VPC/CLB/EIP 等网络资源"
     session_duration = 3600
     relay_state      = "https://console.volcengine.com/vpc"
@@ -89,7 +89,7 @@ permission_sets = [
   },
   {
     key              = "ps_readonly"
-    name             = "ReadOnlyAccess-260701"
+    name             = "ReadOnlyAccess-260701b"
     description      = "只读访问，研发查问题专用"
     session_duration = 7200
     relay_state      = ""
@@ -162,21 +162,21 @@ permission_set_assignments = [
     permission_set_key = "ps_network_admin"
     principal_type     = "Group"
     principal_key      = "grp_netops"
-    target_account_key = "payment-app-260701"
+    target_account_key = "payment-app-260701b"
     target_account_id  = ""
   },
   {
     permission_set_key = "ps_network_admin"
     principal_type     = "Group"
     principal_key      = "grp_netops"
-    target_account_key = "marketing-lab-260701"
+    target_account_key = "marketing-lab-260701b"
     target_account_id  = ""
   },
   {
     permission_set_key = "ps_readonly"
     principal_type     = "Group"
     principal_key      = "grp_dev_readonly"
-    target_account_key = "marketing-lab-260701"
+    target_account_key = "marketing-lab-260701b"
     target_account_id  = ""
   },
 ]
