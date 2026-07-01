@@ -1,18 +1,21 @@
 # ==============================================================================
 # 模块：permission-set-assignment
 # 功能：访问授权 + 权限集部署的原子封装
-# 描述：把"用户/组 × 目标账号 × 权限集"绑定为一条访问授权，并触发权限集到目标账号的部署。
-#       一条授权由两个资源组成：
-#         1. permission_set_assignment：声明授权关系（principal -> target）
-#         2. permission_set_provisioning：将权限集同步到目标账号（创建身份供应商 / 角色）
-# 设计要点：
-#   - 部署需在授权之后或并行进行；这里通过 depends_on 显式编排部署在授权之后
+# 并发规避：assignment 与 provisioning 都对同一目标账号 + 权限集操作，服务端有串行锁。
+#         通过 throttle_seconds 错开不同 assignment 的真实调用时序，避免并发冲突。
 # ==============================================================================
+
+resource "time_sleep" "throttle" {
+  create_duration = "${var.throttle_seconds}s"
+}
+
 resource "volcenginecc_cloudidentity_permission_set_assignment" "this" {
   permission_set_id = var.permission_set_id
   principal_type    = var.principal_type
   principal_id      = var.principal_id
   target_id         = var.target_id
+
+  depends_on = [time_sleep.throttle]
 }
 
 # 触发权限集到目标账号的部署：在目标账号内创建身份供应商与角色

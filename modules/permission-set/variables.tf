@@ -35,3 +35,9 @@ variable "permission_policies" {
   description = "权限策略列表（System 策略名 + Inline 策略 JSON 文档）"
   default     = []
 }
+
+variable "throttle_seconds" {
+  type        = number
+  description = "创建前节流等待秒数，避免 Cloud Control API 并发限制"
+  default     = 0
+}

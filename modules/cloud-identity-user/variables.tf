@@ -39,3 +39,9 @@ variable "password_reset_required" {
   description = "首次登录是否强制重置密码"
   default     = true
 }
+
+variable "throttle_seconds" {
+  type        = number
+  description = "创建前节流等待秒数，避免 Cloud Control API 并发限制"
+  default     = 0
+}

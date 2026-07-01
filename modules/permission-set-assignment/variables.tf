@@ -22,3 +22,9 @@ variable "target_id" {
   type        = string
   description = "目标账号 ID（火山引擎账号 ID）"
 }
+
+variable "throttle_seconds" {
+  type        = number
+  description = "创建前节流等待秒数，避免 Cloud Control API 并发限制"
+  default     = 0
+}

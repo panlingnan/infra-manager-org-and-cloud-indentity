@@ -31,3 +31,9 @@ variable "member_user_ids" {
   description = "成员用户 ID 列表（cloud_identity_user 的 user_id）"
   default     = []
 }
+
+variable "throttle_seconds" {
+  type        = number
+  description = "创建前节流等待秒数，避免 Cloud Control API 并发限制"
+  default     = 0
+}

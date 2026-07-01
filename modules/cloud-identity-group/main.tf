@@ -1,12 +1,14 @@
 # ==============================================================================
 # 模块：cloud-identity-group
 # 功能：云身份中心用户组封装，按职能批量授权
-# 描述：通过用户组承载"通用职能权限"（如运维、研发、安全），
-#       新员工加入对应组即继承所有授权，降低权限运维成本。
-# 典型场景：
-#   - 划分 NetworkOps / DevTeam / SecAdmin 等职能组
-#   - 转岗时仅调整成员所属组，无需逐条改授权
+# 并发规避：CloudIdentity::Group CREATE 有强并发限制（ConcurrentException 高发），
+#         通过 throttle_seconds 强制错开各 group 的真实调用时序。
 # ==============================================================================
+
+resource "time_sleep" "throttle" {
+  create_duration = "${var.throttle_seconds}s"
+}
+
 resource "volcenginecc_cloudidentity_group" "this" {
   group_name   = var.group_name
   display_name = var.display_name
@@ -19,4 +21,6 @@ resource "volcenginecc_cloudidentity_group" "this" {
       user_id = uid
     }
   ]
+
+  depends_on = [time_sleep.throttle]
 }

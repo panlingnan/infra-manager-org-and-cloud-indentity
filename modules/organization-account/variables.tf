@@ -39,3 +39,9 @@ variable "tags" {
   description = "资源标签"
   default     = []
 }
+
+variable "throttle_seconds" {
+  type        = number
+  description = "创建前节流等待秒数，避免 Cloud Control API 并发限制"
+  default     = 0
+}

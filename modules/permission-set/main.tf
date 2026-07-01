@@ -1,13 +1,17 @@
 # ==============================================================================
 # 模块：permission-set
-# 功能：云身份中心访问权限集（Permission Set）封装
-# 描述：权限集是访问火山引擎账号时的权限模板，可由若干 System 策略 + Inline 策略组成。
-#       支持在多个账号下集中管理同一份权限集，授权后自动同步到目标账号。
+# 功能：云身份中心访问权限集封装
+# 并发规避：CloudIdentity::PermissionSet CREATE 存在并发限制，通过 throttle_seconds
+#         错开真实调用时序。
 # 设计要点：
-#   - permission_policies 是 SetNestedAttribute，必须完整定义所有字段（包括 Inline 留空字符串）
+#   - permission_policies 是 SetNestedAttribute，必须完整定义所有字段
 #   - session_duration 单位为秒，建议 3600 或更长以适配长会话场景
-#   - 权限集创建后，通过 cloud-identity-assignments 模块进行授权
 # ==============================================================================
+
+resource "time_sleep" "throttle" {
+  create_duration = "${var.throttle_seconds}s"
+}
+
 resource "volcenginecc_cloudidentity_permission_set" "this" {
   name             = var.name
   description      = var.description
@@ -22,4 +26,6 @@ resource "volcenginecc_cloudidentity_permission_set" "this" {
       permission_policy_document = p.permission_policy_document
     }
   ]
+
+  depends_on = [time_sleep.throttle]
 }
