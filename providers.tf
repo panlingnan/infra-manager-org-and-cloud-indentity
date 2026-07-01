@@ -7,7 +7,7 @@
 #
 # 如需切换内部测试 endpoint（如 cn-guilin-boe），通过环境变量传入：
 #   export VOLCENGINE_ENDPOINT="cloudcontrol.cn-beijing.volcengineapi.com"
-#
+# 
 # 注意：云身份中心是企业组织管理员账号下的全局服务，必须使用管理员账号 AK/SK 执行。
 # ==============================================================================
 provider "volcenginecc" {

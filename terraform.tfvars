@@ -70,7 +70,7 @@ organization_accounts = [
 permission_sets = [
   {
     key              = "ps_network_admin"
-    name             = "NetworkOpsAdmin"
+    name             = "NetworkOpsAdmin-260701"
     description      = "网络运维管理员，可读写 VPC/CLB/EIP 等网络资源"
     session_duration = 3600
     relay_state      = "https://console.volcengine.com/vpc"
@@ -89,7 +89,7 @@ permission_sets = [
   },
   {
     key              = "ps_readonly"
-    name             = "ReadOnlyAccess"
+    name             = "ReadOnlyAccess-260701"
     description      = "只读访问，研发查问题专用"
     session_duration = 7200
     relay_state      = ""

@@ -35,15 +35,3 @@ variable "permission_policies" {
   description = "权限策略列表（System 策略名 + Inline 策略 JSON 文档）"
   default     = []
 }
-
-variable "throttle_seconds" {
-  type        = number
-  description = "创建前节流等待秒数，避免 Cloud Control API 并发限制"
-  default     = 0
-}
-
-variable "wait_for" {
-  type        = any
-  description = "链式串行的哨兵：等待前一个同类资源完成后再开始节流"
-  default     = null
-}
