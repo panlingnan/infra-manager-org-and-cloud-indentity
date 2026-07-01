@@ -45,3 +45,9 @@ variable "throttle_seconds" {
   description = "创建前节流等待秒数，避免 Cloud Control API 并发限制"
   default     = 0
 }
+
+variable "wait_for" {
+  type        = any
+  description = "链式串行的哨兵：本模块 time_sleep 通过 triggers 引用该值，等待前一个同类资源完成后再开始节流。为空表示无前驱。"
+  default     = null
+}

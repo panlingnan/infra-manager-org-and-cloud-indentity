@@ -1,15 +1,28 @@
 # ==============================================================================
 # 项目：火山引擎云身份中心（Cloud Identity）+ 企业组织 IaC 工程
 # 主入口文件：main.tf
-# 描述：基于 volcenginecc Provider 实现：
-#   1. 企业组织树（OU + 成员账号）的批量编排
-#   2. 云身份中心用户与用户组的全生命周期管理
-#   3. 访问权限集（Permission Set）模板化定义
-#   4. 用户/组 × 目标账号 × 权限集的访问授权与部署同步
-# 并发规避：每个 module 内部使用 time_sleep 按业务 key 排序位置错开真实 API 调用，
-#         规避 Cloud Control API 对 CloudIdentity/Organization 类资源的服务端并发限制，
-#         无需外部指定 -parallelism=1 也能稳定 apply。
+#
+# 并发规避（上游哈希 + 阶梯 time_sleep）：
+#   Cloud Control API 对 CloudIdentity/Organization 类资源有服务端并发锁。
+#   本工程采用两层机制：
+#     1. 每个 module 内 time_sleep 的 triggers.wait_for 引用"上一层所有实例的哈希"，
+#        Terraform 图会等待上一层 module 全部完成后，本 module 的 sleep 才开始计时。
+#     2. 每个实例的 throttle_seconds 按业务 key 排序位置 × throttle_step 阶梯递增，
+#        计时结束时刻自然错开，实际 CREATE 调用按序发起。
+#   与 count/for_each 内部自引用不同，跨 module 引用天然无环。
 # ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 各层"上游哈希"：只要上游任意实例发生变化，本层所有实例的 time_sleep 都会重建
+# 用作 sleep 开始时刻的基准点，等价于"等所有上游完成后再开始节流"
+# ------------------------------------------------------------------------------
+locals {
+  upstream_ou_hash      = md5(join(",", [for k in local.ou_keys : module.organization_units[k].org_unit_id]))
+  upstream_user_hash    = md5(join(",", [for k in local.user_keys : module.cloud_identity_users[k].user_id]))
+  upstream_account_hash = md5(join(",", [for k in local.account_keys : module.organization_accounts[k].account_id]))
+  upstream_group_hash   = md5(join(",", [for k in local.group_keys : module.cloud_identity_groups[k].group_id]))
+  upstream_ps_hash      = md5(join(",", [for k in local.ps_keys : module.permission_sets[k].permission_set_id]))
+}
 
 # ------------------------------------------------------------------------------
 # 1. 企业组织：组织单元（OU）
@@ -22,10 +35,12 @@ module "organization_units" {
   description      = each.value.description
   parent_id        = var.root_parent_id
   throttle_seconds = local.ou_throttle[each.key]
+  # 首层无上游，wait_for 传 null
+  wait_for = null
 }
 
 # ------------------------------------------------------------------------------
-# 2. 企业组织：成员账号
+# 2. 企业组织：成员账号 - 等所有 OU 完成后开始阶梯节流
 # ------------------------------------------------------------------------------
 module "organization_accounts" {
   source   = "./modules/organization-account"
@@ -38,9 +53,9 @@ module "organization_accounts" {
   verification_relation_id = each.value.verification_relation_id
   org_unit_id              = each.value.org_unit_key == "" ? var.root_parent_id : module.organization_units[each.value.org_unit_key].org_unit_id
 
-  # 合并资源标签：业务自定义标签 + 工程通用标签
   tags             = concat(each.value.tags, local.common_tags)
   throttle_seconds = local.account_throttle[each.value.account_name]
+  wait_for         = local.upstream_ou_hash
 }
 
 # ------------------------------------------------------------------------------
@@ -58,10 +73,11 @@ module "cloud_identity_users" {
   password                = each.value.password
   password_reset_required = each.value.password_reset_required
   throttle_seconds        = local.user_throttle[each.key]
+  wait_for                = null
 }
 
 # ------------------------------------------------------------------------------
-# 4. 云身份中心：用户组
+# 4. 云身份中心：用户组 - 等所有 users 完成后开始阶梯节流
 # ------------------------------------------------------------------------------
 module "cloud_identity_groups" {
   source   = "./modules/cloud-identity-group"
@@ -76,6 +92,7 @@ module "cloud_identity_groups" {
     for member_key in each.value.member_keys : module.cloud_identity_users[member_key].user_id
   ]
   throttle_seconds = local.group_throttle[each.key]
+  wait_for         = local.upstream_user_hash
 }
 
 # ------------------------------------------------------------------------------
@@ -91,10 +108,11 @@ module "permission_sets" {
   relay_state         = each.value.relay_state
   permission_policies = each.value.permission_policies
   throttle_seconds    = local.ps_throttle[each.key]
+  wait_for            = null
 }
 
 # ------------------------------------------------------------------------------
-# 6. 访问授权：将权限集授予用户/组对目标账号的访问权限
+# 6. 访问授权 - 等所有权限集/账号/用户/组完成后开始阶梯节流
 # ------------------------------------------------------------------------------
 module "permission_set_assignments" {
   source = "./modules/permission-set-assignment"
@@ -114,4 +132,6 @@ module "permission_set_assignments" {
     : each.value.target_account_id
   )
   throttle_seconds = local.assignment_throttle[each.key]
+  # 组合所有上游哈希，等这些层全部完成后再开始 sleep
+  wait_for = "${local.upstream_ps_hash}|${local.upstream_user_hash}|${local.upstream_group_hash}|${local.upstream_account_hash}"
 }

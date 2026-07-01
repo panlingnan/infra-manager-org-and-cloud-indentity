@@ -10,6 +10,10 @@
 # 节流：调用者按业务 key 排序索引 × 单位延迟，得到 throttle_seconds
 resource "time_sleep" "throttle" {
   create_duration = "${var.throttle_seconds}s"
+  triggers = {
+    parent   = var.parent_id
+    wait_for = var.wait_for == null ? "" : tostring(var.wait_for)
+  }
 }
 
 resource "volcenginecc_organization_unit" "this" {

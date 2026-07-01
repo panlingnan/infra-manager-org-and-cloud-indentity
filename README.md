@@ -77,7 +77,11 @@ flowchart LR
 2. **权限集承载共性权限**：把"网络运维"、"研发只读"等通用职能预置为 Permission Set，跨账号复用，避免在每个账号内重复配置策略。
 3. **稳定的 for_each key**：所有模块均使用业务语义稳定的 key（如 `OU.key`、`account_name`、`user.key`）作为 `for_each` 索引，规避列表顺序变更导致的资源漂移。授权 key 使用 `permission_set_key|principal_type|principal_key|target` 组合，保证幂等。
 4. **Assignment 与 Provisioning 联动**：在 [permission-set-assignment](file:///Users/bytedance/Documents/Vibe%20Coding/cloud_identity/modules/permission-set-assignment/main.tf) 模块内，`provisioning` 通过 `depends_on` 显式依赖 `assignment`，确保授权创建后立即把权限集部署到目标账号，用户登录立即可用。
-5. **服务端并发限制的代码级规避**：Cloud Control API 对 `CloudIdentity::Group/User/PermissionSet/PermissionSetAssignment` 与 `Organization::Unit/Account` 等资源有服务端并发锁。工程在每个 module 内嵌 `time_sleep`，按业务 key 排序位置计算 `throttle_seconds`（默认 `throttle_step = 8` 秒），让真实 API 调用自动错峰，无需依赖 `-parallelism=1`。
+5. **服务端并发限制的代码级规避**：Cloud Control API 对 `CloudIdentity::Group/User/PermissionSet/PermissionSetAssignment` 与 `Organization::Unit/Account` 等资源有服务端并发锁。工程采用"上游哈希 + 阶梯 time_sleep"两层机制：
+   - 每个 module 的 `time_sleep.triggers.wait_for` 引用**上一层所有实例聚合成的哈希**，Terraform 图会等待上一层 module 完全结束后本层 sleep 才开始计时（跨 module 引用无 cycle）；
+   - 各实例的 `throttle_seconds = 索引 × throttle_step`（默认 `throttle_step = 20`s）阶梯递增，使真实 API 调用按业务 key 排序次序错峰发起。
+   
+   这样即便部署管道禁止调整 `-parallelism`，同类资源也会自动串行创建。
 6. **空 uint64 字段 omit**：`verification_relation_id` 是 uint64 类型，空字符串会触发 `json: invalid use of ,string struct tag` 错误；模块内通过 `var.x == "" ? null : var.x` 兜底，业务侧可放心填空。
 7. **安全标签默认化**：[locals.tf](file:///Users/bytedance/Documents/Vibe%20Coding/cloud_identity/locals.tf) 中 `common_tags` 自动注入 `Project / Environment / ManagedBy=terraform`，便于审计与成本分摊。
 
@@ -316,7 +320,7 @@ permission_set_assignment_status = {
 | :--- | :--- | :--- |
 | `trying to unmarshal "REPLACE_..." into uint64` | `root_parent_id` 是占位符 | 替换为真实根 OU ID |
 | `trying to unmarshal "" into *uint64` | uint64 字段传了空字符串 | 工程已在 `organization-account` 模块中兜底；若新增 uint64 字段需同样处理 |
-| `ConcurrentException: Concurrent request exception` | Cloud Control API 并发限制 | 工程已通过 `time_sleep` 阶梯节流规避；如仍出现，将 `locals.tf` 中 `throttle_step` 调大即可 |
+| `ConcurrentException: Concurrent request exception` | Cloud Control API 并发限制 | 工程已通过"上游哈希 + 阶梯 time_sleep"规避；如仍偶发，将 `locals.tf` 中 `throttle_step` 由 20 调大到 30/45 即可 |
 | Permission Set 重复 plan 显示 `relay_state` 漂移 | 控制台对 relay_state 做了默认值补全 | 在 tfvars 中显式声明你期望的 relay_state；或忽略 plan 中该 in-place update |
 
 ### 4.6 销毁资源

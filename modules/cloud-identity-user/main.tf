@@ -6,6 +6,12 @@
 
 resource "time_sleep" "throttle" {
   create_duration = "${var.throttle_seconds}s"
+  # wait_for 引用前一个同类资源的 id/user_name/等，形成链式串行：
+  # Terraform 图会等待 wait_for 输出可用（即上一个 user 已创建）后，才开始本 sleep 计时
+  triggers = {
+    user     = var.user_name
+    wait_for = var.wait_for == null ? "" : tostring(var.wait_for)
+  }
 }
 
 resource "volcenginecc_cloudidentity_user" "this" {

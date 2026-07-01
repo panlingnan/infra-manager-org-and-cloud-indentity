@@ -1,21 +1,21 @@
 # ==============================================================================
 # 局部变量
-# 集中管理通用标签、节流参数、跨模块查找映射
+# 集中管理通用标签、节流参数
 # ==============================================================================
 locals {
-  # 全局通用标签：所有支持 Tags 的资源统一打标，便于审计与成本归集
   common_tags = [
     { key = "Project", value = var.project },
     { key = "Environment", value = var.environment },
     { key = "ManagedBy", value = "terraform" },
   ]
 
-  # 节流单位（秒）：Cloud Control API 对 CloudIdentity/Organization 类资源存在服务端并发限制，
-  # 通过 time_sleep 按业务 key 排序位置阶梯递增，错开真实 API 调用时序。
-  throttle_step = 8
+  # 节流单位（秒）：Cloud Control API 对 CloudIdentity/Organization 类资源存在服务端并发限制。
+  # module 内 time_sleep 通过 triggers.wait_for 依赖上一层输出的哈希，
+  # Terraform 图会等待上一层全部完成后才开始本层 sleep 计时，
+  # 然后按业务 key 排序位置 × throttle_step 阶梯错开各实例的实际 CREATE 时刻。
+  # 20s 是经验值：足以覆盖单个 CloudIdentity CREATE 端到端耗时（5-15s）。
+  throttle_step = 20
 
-  # 各资源按业务 key 排序后计算索引 → 索引 × throttle_step = 每个实例的等待秒数。
-  # 索引 0 立即执行，后续实例依次错开，避免 ConcurrentException。
   ou_keys     = sort([for ou in var.organization_units : ou.key])
   ou_throttle = { for i, k in local.ou_keys : k => i * local.throttle_step }
 

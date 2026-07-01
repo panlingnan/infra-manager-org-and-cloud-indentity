@@ -10,6 +10,10 @@
 
 resource "time_sleep" "throttle" {
   create_duration = "${var.throttle_seconds}s"
+  triggers = {
+    name     = var.name
+    wait_for = var.wait_for == null ? "" : tostring(var.wait_for)
+  }
 }
 
 resource "volcenginecc_cloudidentity_permission_set" "this" {

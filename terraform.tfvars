@@ -17,47 +17,49 @@ environment = "prod"
 root_parent_id = "7352814720803651635"
 
 # ------------------------------------------------------------------------------
-# 组织结构：2 个一级 OU（Production / Sandbox）
+# 组织结构：2 个一级 OU（支付业务 / 营销业务）
+# 命名带日期后缀，避免与历史 OU 名重复
 # ------------------------------------------------------------------------------
 organization_units = [
   {
-    key         = "ou_prod"
-    name        = "Production"
-    description = "生产业务账号容器"
+    key         = "ou_payment"
+    name        = "PaymentBU-260701"
+    description = "支付业务单元"
   },
   {
-    key         = "ou_sandbox"
-    name        = "Sandbox"
-    description = "沙盒/测试账号容器"
+    key         = "ou_marketing"
+    name        = "MarketingBU-260701"
+    description = "营销业务单元"
   },
 ]
 
 # ------------------------------------------------------------------------------
 # 成员账号：每个 OU 各创建一个示例账号
+# 命名带日期后缀，避免与已存在账号冲突
 # ------------------------------------------------------------------------------
 organization_accounts = [
   {
-    account_name             = "workload-prod-01"
-    show_name                = "WorkloadProd01"
-    description              = "生产业务负载账号"
-    org_unit_key             = "ou_prod"
+    account_name             = "payment-app-260701"
+    show_name                = "PaymentApp260701"
+    description              = "支付业务生产账号"
+    org_unit_key             = "ou_payment"
     allow_console            = 1
     verification_relation_id = ""
     tags = [
-      { key = "BusinessUnit", value = "Workload" },
-      { key = "CostCenter", value = "PROD-001" },
+      { key = "BusinessUnit", value = "Payment" },
+      { key = "CostCenter", value = "PAY-260701" },
     ]
   },
   {
-    account_name             = "sandbox-01"
-    show_name                = "Sandbox01"
-    description              = "研发沙盒账号"
-    org_unit_key             = "ou_sandbox"
+    account_name             = "marketing-lab-260701"
+    show_name                = "MarketingLab260701"
+    description              = "营销业务实验/沙盒账号"
+    org_unit_key             = "ou_marketing"
     allow_console            = 1
     verification_relation_id = ""
     tags = [
-      { key = "BusinessUnit", value = "RnD" },
-      { key = "CostCenter", value = "SANDBOX-001" },
+      { key = "BusinessUnit", value = "Marketing" },
+      { key = "CostCenter", value = "MKT-260701" },
     ]
   },
 ]
@@ -151,30 +153,30 @@ cloud_identity_groups = [
 
 # ------------------------------------------------------------------------------
 # 访问授权：
-#   1. NetOps 组对生产账号拥有网络管理员权限
-#   2. NetOps 组对沙盒账号拥有网络管理员权限
-#   3. DevReadOnly 组对沙盒账号拥有只读权限
+#   1. NetOps 组对支付账号拥有网络管理员权限
+#   2. NetOps 组对营销账号拥有网络管理员权限
+#   3. DevReadOnly 组对营销账号拥有只读权限
 # ------------------------------------------------------------------------------
 permission_set_assignments = [
   {
     permission_set_key = "ps_network_admin"
     principal_type     = "Group"
     principal_key      = "grp_netops"
-    target_account_key = "workload-prod-01"
+    target_account_key = "payment-app-260701"
     target_account_id  = ""
   },
   {
     permission_set_key = "ps_network_admin"
     principal_type     = "Group"
     principal_key      = "grp_netops"
-    target_account_key = "sandbox-01"
+    target_account_key = "marketing-lab-260701"
     target_account_id  = ""
   },
   {
     permission_set_key = "ps_readonly"
     principal_type     = "Group"
     principal_key      = "grp_dev_readonly"
-    target_account_key = "sandbox-01"
+    target_account_key = "marketing-lab-260701"
     target_account_id  = ""
   },
 ]
