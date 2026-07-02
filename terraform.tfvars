@@ -51,7 +51,7 @@ organization_accounts = [
     ]
   },
   {
-    account_name             = "marketing-lab-260701b"
+    account_name             = "market-lab-260701b"
     show_name                = "MarketingLab260701b"
     description              = "营销业务实验/沙盒账号"
     org_unit_key             = "ou_marketing"
@@ -169,14 +169,14 @@ permission_set_assignments = [
     permission_set_key = "ps_network_admin"
     principal_type     = "Group"
     principal_key      = "grp_netops"
-    target_account_key = "marketing-lab-260701b"
+    target_account_key = "market-lab-260701b"
     target_account_id  = ""
   },
   {
     permission_set_key = "ps_readonly"
     principal_type     = "Group"
     principal_key      = "grp_dev_readonly"
-    target_account_key = "marketing-lab-260701b"
+    target_account_key = "market-lab-260701b"
     target_account_id  = ""
   },
 ]
